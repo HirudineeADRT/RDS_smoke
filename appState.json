@@ -1,0 +1,140 @@
+{
+  "EDITOR_STATE": {
+    "allProjectFiles": {
+      "b0226ca8-e8cb-4a1d-b814-5aa8c85815bb": {
+        "id": "b0226ca8-e8cb-4a1d-b814-5aa8c85815bb",
+        "parent": null,
+        "name": "RDS_smoke",
+        "type": "DIRECTORY",
+        "isDirectory": true,
+        "children": [
+          "05fe4bd4-ddae-4c2f-b196-ea7bcf117d27",
+          "de84557d-2dab-4a5c-9b46-333ff502fb50"
+        ],
+        "isRemovable": false,
+        "filePath": "RDS_smoke"
+      },
+      "05fe4bd4-ddae-4c2f-b196-ea7bcf117d27": {
+        "id": "05fe4bd4-ddae-4c2f-b196-ea7bcf117d27",
+        "parent": "b0226ca8-e8cb-4a1d-b814-5aa8c85815bb",
+        "name": "lambda.js",
+        "type": "JS_LAMBDA",
+        "isDirectory": false,
+        "children": [],
+        "isRemovable": true,
+        "filePath": "RDS_smoke/lambda.js",
+        "code": "let SL_AWS = require('slappforge-sdk-aws');\nlet connectionManager = require('./ConnectionManager');\nconst rds = new SL_AWS.RDS(connectionManager);\n\nexports.handler = function (event, context, callback) {\n\n    // You can pass the existing connection to this function.\n    // A new connection will be created if it's not present as the third param \n    // You must always end/destroy the DB connection after it's used\n    rds.query({\n        instanceIdentifier: 'hirudinee',\n        query: 'SELECT * FROM Persons',\n        inserts: []\n    }, function (error, results, connection) {\n        if (error) {\n            console.log(\"Error occurred\");\n            throw error;\n        } else {\n            console.log(\"Success\")\n            console.log(results);\n        }\n\n        connection.end();\n    });\n\n    callback(null, { \"message\": \"Successfully executed\" });\n}",
+        "config": {
+          "runtime": "nodejs8.10",
+          "handler": "handler",
+          "timeout": 60,
+          "memory": 128,
+          "layers": []
+        },
+        "triggers": []
+      },
+      "de84557d-2dab-4a5c-9b46-333ff502fb50": {
+        "id": "de84557d-2dab-4a5c-9b46-333ff502fb50",
+        "parent": "b0226ca8-e8cb-4a1d-b814-5aa8c85815bb",
+        "name": "ConnectionManager.js",
+        "type": "JS_FILE",
+        "isDirectory": false,
+        "children": [],
+        "isRemovable": true,
+        "filePath": "RDS_smoke/ConnectionManager.js",
+        "code": "module.exports = function() {\n    this.dbConnections = [];\n\n    this.dbConnections[\"hirudinee\"] = {\n        host: process.env.EndPoint_rdsHirudinee,\n        port: process.env.Port_rdsHirudinee,\n        user: process.env.User_rdsHirudinee,\n        password: process.env.Password_rdsHirudinee,\n        database: \"TestHiruDB\"\n    };\n};"
+      }
+    },
+    "deletedFiles": [],
+    "rootNode": "b0226ca8-e8cb-4a1d-b814-5aa8c85815bb",
+    "openFiles": [
+      "05fe4bd4-ddae-4c2f-b196-ea7bcf117d27"
+    ],
+    "currentFileId": "05fe4bd4-ddae-4c2f-b196-ea7bcf117d27",
+    "resources": {
+      "rds-hirudinee": {
+        "name": "rds-hirudinee",
+        "type": "RDS",
+        "config": {
+          "editMode": false,
+          "operation": 0,
+          "rdsInstance": {
+            "rdsEngineType": "mysql",
+            "rdsEdition": "",
+            "rdsInstanceSpec": {
+              "dbInstanceClass": "db.t2.micro",
+              "dbLicenseModel": "general-public-license",
+              "dbEngineVersion": "5.7.19"
+            },
+            "rdsSetting": {
+              "instanceIdentifier": "hirudinee",
+              "masterUsername": "hiruadmin",
+              "masterPassword": "12345678"
+            },
+            "rdsDBOptions": {
+              "dbName": "TestHiruDB",
+              "dbPort": "3306"
+            },
+            "rdsInstanceArn": "",
+            "Host": "",
+            "doesExist": false,
+            "initializationQuery": "CREATE TABLE Persons (\n    PersonID int,\n    LastName varchar(255),\n    FirstName varchar(255),\n    Address varchar(255),\n    City varchar(255)\n);",
+            "alreadyDeployed": false
+          },
+          "rdsInstanceResources": [],
+          "projectRegion": "ca-central-1",
+          "mode": 0,
+          "additionalFiles": [],
+          "params": {
+            "query": "SELECT * FROM Persons",
+            "inserts": ""
+          },
+          "isGlobalEditMode": false,
+          "enableInject": true,
+          "isNewFromGlobal": false
+        }
+      }
+    },
+    "customTemplate": {
+      "dialect": null,
+      "definitions": {}
+    },
+    "envVariables": [
+      {
+        "lambdaId": "all",
+        "varKey": "SIGMA_AWS_ACC_ID",
+        "varValue": null,
+        "shouldPersist": false,
+        "displayOnly": false,
+        "editable": false
+      }
+    ],
+    "packageJSON": {
+      "dependencies": {
+        "slappforge-sdk-aws": {
+          "name": "slappforge-sdk-aws",
+          "language": "javascript",
+          "version": "0.0.5",
+          "dev": false,
+          "notRemovable": false
+        }
+      }
+    }
+  },
+  "PROJECT_META": {
+    "projectName": "RDS_smoke",
+    "projectDescription": "",
+    "projectVersion": "1.0.0",
+    "projectRegion": "ca-central-1",
+    "platform": "AWS",
+    "platformRegions": {},
+    "lastSave": 1561548153518
+  },
+  "VCS_STATE": {
+    "provider": "GitHub",
+    "repo": {
+      "name": "RDS_smoke",
+      "url": "https://github.com/HirudineeADRT/RDS_smoke"
+    }
+  }
+}
